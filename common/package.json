@@ -1,0 +1,10 @@
+{
+  "name": "phone-cam-to-pc-converter-common",
+  "description": "The common library package for phone-cam-to-pc-convertee, not intended to be used by itself.",
+  "main": "common.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "coolguy284",
+  "license": "MIT"
+}
