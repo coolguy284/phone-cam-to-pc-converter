@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset = 'utf-8'>
+    
+    <title>Webcam Page</title>
+    
+    <meta name = 'viewport' content = 'width=device-width, initial-scale=1.0'>
+    
+    <style>
+      button { display: block; padding: 1rem 2rem 1rem; }
+      
+      p { padding: 0.5rem; }
+      
+      video { width: 640px; }
+    </style>
+  </head>
+  <body>
+    <button onclick = 'StartWatching();'>Start Watching</button>
+    <p><span id = 'status_span'>not watching</span></p>
+    <video id = 'video' autoplay = true></video>
+    
+    <script>
+      var source, sourceBuffer, queuedBuffers = [], ws = new WebSocket(`wss://${location.host}/video_ws`), removeTimeout;
+      
+      function StartWatching() {
+        source = new MediaSource();
+        // it doesnt support srcObject for a mediasource yet
+        video.src = URL.createObjectURL(source);
+        source.onsourceopen = () => {
+          sourceBuffer = source.addSourceBuffer('video/webm; codecs=vp8');
+          sourceBuffer.onerror = e => console.error(e);
+          sourceBuffer.onupdate = () => {
+            if (queuedBuffers.length) sourceBuffer.appendBuffer(queuedBuffers.splice(0, 1)[0]);
+          };
+          video.play();
+        };
+        status_span.textContent = 'watching';
+      }
+      
+      ws.onopen = () => {
+        ws.onmessage = async msg => {
+          let buffer = await msg.data.arrayBuffer();
+          //console.log(msg);
+          if (sourceBuffer.updating || queuedBuffers.length > 0) {
+            queuedBuffers.push(buffer);
+          } else {
+            sourceBuffer.appendBuffer(buffer);
+          }
+          if (removeTimeout) clearTimeout(removeTimeout);
+          removeTimeout = setTimeout(() => {
+            video.src = '';
+            video.style.display = 'none';
+            status_span.textContent = 'not watching';
+          }, 800);
+        };
+      };
+    </script>
+  </body>
+</html>

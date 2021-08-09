@@ -25,6 +25,7 @@ var http = require('http');
 var https = require('https');
 var http2 = require('http2');
 var crypto = require('crypto');
+var ws = require('ws');
 
 var common = require('./common');
 
@@ -87,6 +88,17 @@ if (process.env.HTTPS_IP) {
   http2Server.on('stream', require('./requests/main'));
 }
 
+if (process.env.HTTP_IP || process.env.HTTPS_IP) {
+  global.videoWSServer = new ws.Server({ noServer: true });
+  videoWSServer.on('connection', function videoWSFunc(ws, req, requestProps) {
+    ws.on('message', msg => {
+      for (var ws2 of videoWSServer.clients) {
+        if (ws2 != ws) ws2.send(msg);
+      }
+    });
+  });
+}
+
 
 // so server doesnt go down for an error
 process.on('uncaughtException', err => {
@@ -101,7 +113,7 @@ process.on('unhandledRejection', err => {
 
 
 // website cache
-if (process.env.NODESRVMAIN_CACHE_MODE == '1') {
+if (process.env.CACHE_MODE == '1') {
   global.filesCache = {};
   require('./common/recursivereaddir')('websites/public').forEach(filename => {
     filename = 'websites/public/' + filename;

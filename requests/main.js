@@ -19,7 +19,7 @@ module.exports = async function main(...args) {
     
     var requestProps = common.getRequestProps(...args, 'main');
     
-    if (!requestProps.url.pathname.startsWith('/api/')) logger.info(common.getReqLogStr(requestProps));
+    logger.info(common.getReqLogStr(requestProps));
     
     if (process.env.ONLY_LOCAL_IPS && process.env.ONLY_LOCAL_IPS != 'false' && !/(?:::ffff:)?(?:192.168.[0-9]{1,3}.[0-9]{1,3}|127.0.0.1)|::1/.test(requestProps.ip)) {
       await common.resp.headers(requestProps, 403);

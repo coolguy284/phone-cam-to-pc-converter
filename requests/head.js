@@ -9,10 +9,5 @@ module.exports = async function headMethod(requestProps) {
     return;
   }
   
-  if (requestProps.url.pathname.startsWith('/api/')) {
-    await common.resp.headers(requestProps, 501);
-    await common.resp.end(requestProps);
-  }
-  
   await common.resp.fileFull(requestProps, publicPath, true);
 };

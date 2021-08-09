@@ -9,14 +9,5 @@ module.exports = async function getMethod(requestProps) {
     return;
   }
   
-  let match;
-  
-  if (requestProps.url.pathname.startsWith('/api/')) {
-    await common.resp.headers(requestProps, 500, { 'content-type': 'text/plain; charset=utf-8' });
-    await common.resp.end(requestProps, 'Error: invalid API endpoint');
-  }
-  
-  else {
-    await common.resp.fileFull(requestProps, publicPath);
-  }
+  await common.resp.fileFull(requestProps, publicPath);
 };

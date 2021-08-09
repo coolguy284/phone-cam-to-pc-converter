@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset = 'utf-8'>
+    
+    <title>Camera Reader</title>
+    
+    <meta name = 'viewport' content = 'width=device-width, initial-scale=1.0'>
+    
+    <style>
+      button { display: block; padding: 1rem 2rem 1rem; }
+      
+      p { padding: 0.5rem; }
+      
+      input[type = checkbox], label { padding: 1rem; }
+      
+      video { width: 800px; }
+      
+      @media (max-width: 800px) {
+        video { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick = 'ToggleCapture();'>Toggle Capture</button>
+    <p><input type = 'checkbox' id = 'environment' checked><label for = 'environment'>Environment Cam</label></p>
+    <p><input type = 'checkbox' id = 'show_preview' oninput = 'TogglePreview();'><label for = 'show_preview'>Show Preview</label></p>
+    <p><span id = 'status_span'>not capturing</span></p>
+    <video id = 'video' autoplay = true style = 'display: none;'></video>
+    
+    <script>
+      var stream = null, recorder = null, ws = new WebSocket(`wss://${location.host}/video_ws`);
+      
+      async function ToggleCapture() {
+        if (stream) {
+          if (show_preview.checked) {
+            video.srcObject = null;
+            video.style.display = 'none';
+          }
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+          status_span.textContent = 'not capturing';
+        } else {
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({
+              video: { facingMode: environment.checked ? 'environment' : 'user' }
+            });
+            if (show_preview.checked) {
+              video.style.display = '';
+              video.srcObject = stream;
+            }
+            // not video/mp4; codecs="avc1.42E01E, mp4a.40.2"
+            recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8'});
+            recorder.ondataavailable = e => {
+              //console.log(e.data);
+              ws.send(e.data);
+            };
+            recorder.start(17);
+            status_span.textContent = 'capturing video';
+          } catch (err) {
+            console.error(err);
+            status_span.textContent = err.toString();
+          }
+        }
+      }
+      
+      function TogglePreview() {
+        if (show_preview.checked) {
+          if (stream) {
+            video.style.display = '';
+            video.srcObject = stream;
+          }
+        } else {
+          video.srcObject = null;
+          video.style.display = 'none';
+        }
+      }
+    </script>
+  </body>
+</html>
