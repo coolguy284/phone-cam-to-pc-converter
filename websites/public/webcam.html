@@ -21,7 +21,7 @@
     <video id = 'video' autoplay = true></video>
     
     <script>
-      var source, sourceBuffer, queuedBuffers = [], ws = new WebSocket(`wss://${location.host}/video_ws`), removeTimeout;
+      var source, sourceBuffer, queuedBuffers = [], ws = new WebSocket(`ws${location.protocol == 'https:' ? 's' : ''}://${location.host}/video_ws`), removeTimeout;
       
       function StartWatching() {
         source = new MediaSource();

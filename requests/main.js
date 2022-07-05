@@ -28,14 +28,6 @@ module.exports = async function main(...args) {
       return;
     }
     
-    if (requestProps.proto == 'http') {
-      let newURL = new URL(requestProps.url);
-      newURL.protocol = 'https:';
-      await common.resp.headers(requestProps, 307, { 'location': newURL.href });
-      await common.resp.end(requestProps);
-      return;
-    }
-    
     if (!(requestProps.method in methods && methods[requestProps.method](requestProps) != 1)) {
       await common.resp.headers(requestProps, 501);
       await common.resp.end(requestProps);

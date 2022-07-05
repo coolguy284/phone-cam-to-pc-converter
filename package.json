@@ -1,6 +1,6 @@
 {
   "name": "phone-cam-to-pc-converter",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Use this to view a password protected phone video camera stream on pc for use with OBS virtual camera.",
   "main": "index.js",
   "scripts": {
