@@ -1,6 +1,6 @@
 {
   "name": "phone-cam-to-pc-converter",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Use this to view a password protected phone video camera stream on pc for use with OBS virtual camera.",
   "main": "index.js",
   "scripts": {
@@ -11,11 +11,18 @@
     "url": "git+https://github.com/coolguy284/phone-cam-to-pc-converter.git"
   },
   "keywords": [
-    "phone",
+    "nodejs",
+    "javascript",
+    "node",
+    "video",
     "camera",
-    "webcam"
+    "js",
+    "phone",
+    "node-js",
+    "webcam",
+    "webcam-streaming"
   ],
-  "author": "coolguy284",
+  "author": "coolguy284 <coolguy284v64@gmail.com> (https://github.com/coolguy284)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/coolguy284/phone-cam-to-pc-converter/issues"
