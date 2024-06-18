@@ -1,0 +1,41 @@
+/* flex-based reset */
+
+body, body *:not(script) {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+  color: white;
+}
+
+html {
+  font-size: 1.2rem;
+}
+
+body, p, h1 {
+  margin: 0;
+}
+
+body {
+  padding: 0.5rem;
+}
+
+/* page styles */
+
+body {
+  background-color: rgb(20, 20, 20);
+  font-family: Arial, sans-serif;
+}
+
+a {
+  text-decoration: underline;
+  border: 0.2rem solid white;
+  border-radius: 0.6rem;
+  padding: 0.6rem;
+  width: 8rem;
+}
+
+h1 {
+  margin-top: 1rem;
+  margin-bottom: 0.2rem;
+}
