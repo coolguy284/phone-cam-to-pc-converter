@@ -19,6 +19,15 @@
           justify-content: center;
         }
       }
+      
+      div {
+        overflow: hidden;
+      }
+      
+      video {
+        flex-shrink: 1;
+        height: calc(100vh - 1rem);
+      }
     </style>
   </head>
   
@@ -28,10 +37,13 @@
     </div>
     
     <div id = 'video_div' style = 'display: none;'>
-      <video id = 'video'></video>
+      <video id = 'video' autoplay></video>
     </div>
     
     <script>
+      let STREAM_IDLE_TIMEOUT_MS = 500;
+      let STREAM_OFFLINE_MSG = 'Stream Offline';
+      
       // Set text to null to show video, otherwise text will be shown
       function setStatusText(text) {
         if (text == null) {
@@ -40,44 +52,73 @@
         } else {
           text_msg.textContent = text;
           text_msg_div.style.display = '';
-          video_div.style.display = '';
+          video_div.style.display = 'none';
         }
       }
       
-      var source, sourceBuffer, queuedBuffers = [], ws = new WebSocket(`ws${location.protocol == 'https:' ? 's' : ''}://${location.host}/video_ws`), removeTimeout;
+      setStatusText(STREAM_OFFLINE_MSG);
       
-      function StartWatching() {
+      var streamActive = false;
+      var source = null;
+      var sourceBuffer = null;
+      var queuedBuffers = [];
+      var ws = new WebSocket(`ws${location.protocol == 'https:' ? 's' : ''}://${location.host}/video_ws`);
+      var removeTimeout;
+      
+      function startWatching() {
+        if (streamActive) return;
+        streamActive = true;
+        
         source = new MediaSource();
+        
         // it doesnt support srcObject for a mediasource yet
         video.src = URL.createObjectURL(source);
-        source.onsourceopen = () => {
+        source.addEventListener('sourceopen', () => {
           sourceBuffer = source.addSourceBuffer('video/webm; codecs=vp8');
-          sourceBuffer.onerror = e => console.error(e);
-          sourceBuffer.onupdate = () => {
+          sourceBuffer.addEventListener('error', err => console.error(err));
+          sourceBuffer.addEventListener('update', () => {
             if (queuedBuffers.length) sourceBuffer.appendBuffer(queuedBuffers.splice(0, 1)[0]);
-          };
+          });
           video.play();
-        };
-        status_span.textContent = 'watching';
+        });
+        
+        setStatusText(null);
       }
       
-      ws.onopen = () => {
-        ws.onmessage = async msg => {
-          let buffer = await msg.data.arrayBuffer();
-          //console.log(msg);
-          if (sourceBuffer.updating || queuedBuffers.length > 0) {
-            queuedBuffers.push(buffer);
-          } else {
-            sourceBuffer.appendBuffer(buffer);
-          }
-          if (removeTimeout) clearTimeout(removeTimeout);
-          removeTimeout = setTimeout(() => {
-            video.src = '';
-            video.style.display = 'none';
-            status_span.textContent = 'not watching';
-          }, 800);
-        };
-      };
+      function stopWatching() {
+        streamActive = false;
+        
+        source.removeSourceBuffer(sourceBuffer);
+        source.endOfStream();
+        source = null;
+        sourceBuffer = null;
+        queuedBuffers.length = 0;
+      }
+      
+      ws.addEventListener('message', async msg => {
+        if (!streamActive) {
+          startWatching();
+        }
+        
+        let buffer = await msg.data.arrayBuffer();
+        //console.log(msg);
+        
+        if (sourceBuffer.updating || queuedBuffers.length > 0) {
+          queuedBuffers.push(buffer);
+        } else {
+          sourceBuffer.appendBuffer(buffer);
+        }
+        
+        if (removeTimeout) {
+          clearTimeout(removeTimeout);
+          removeTimeout = null;
+        }
+        
+        removeTimeout = setTimeout(() => {
+          stopWatching();
+          setStatusText(STREAM_OFFLINE_MSG);
+        }, STREAM_IDLE_TIMEOUT_MS);
+      });
     </script>
   </body>
 </html>
