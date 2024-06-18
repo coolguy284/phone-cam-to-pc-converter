@@ -13,6 +13,7 @@
       body {
         align-items: stretch;
         justify-content: stretch;
+        padding: 0;
         
         > div {
           flex-grow: 1;
@@ -22,11 +23,13 @@
       
       div {
         overflow: hidden;
+        height: 100vh;
       }
       
       video {
-        flex-shrink: 1;
-        height: calc(100vh - 1rem);
+        object-fit: contain;
+        width: 100vw;
+        height: 100vh;
       }
     </style>
   </head>
@@ -93,6 +96,7 @@
         source = null;
         sourceBuffer = null;
         queuedBuffers.length = 0;
+        video.removeAttribute('src');
       }
       
       ws.addEventListener('message', async msg => {

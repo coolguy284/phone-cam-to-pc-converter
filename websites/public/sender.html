@@ -22,6 +22,11 @@
       .short-gap {
         gap: 0.3rem;
       }
+      
+      video {
+        width: calc(100vw - 1rem);
+        height: 20rem;
+      }
     </style>
   </head>
   
@@ -30,7 +35,7 @@
     
     <hr>
     
-    <button onclick = 'ToggleCapture();'>Toggle Sending</button>
+    <button onclick = 'toggleCapture();'>Toggle Sending</button>
     
     <p class = 'row'>
       <input type = 'checkbox' id = 'environment' checked>
@@ -38,7 +43,7 @@
     </p>
     
     <p class = 'row'>
-      <input type = 'checkbox' id = 'show_preview' oninput = 'TogglePreview();'>
+      <input type = 'checkbox' id = 'show_preview' oninput = 'togglePreview();'>
       <label for = 'show_preview'>Show Preview</label>
     </p>
     
@@ -52,7 +57,7 @@
     <script>
       var stream = null, recorder = null, ws = new WebSocket(`wss://${location.host}/video_ws`);
       
-      async function ToggleCapture() {
+      async function toggleCapture() {
         if (stream) {
           if (show_preview.checked) {
             video.srcObject = null;
@@ -64,14 +69,14 @@
         } else {
           try {
             stream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: environment.checked ? 'environment' : 'user' }
+              video: { facingMode: environment.checked ? 'environment' : 'user' },
             });
             if (show_preview.checked) {
               video.style.display = '';
               video.srcObject = stream;
             }
             // not video/mp4; codecs="avc1.42E01E, mp4a.40.2"
-            recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8'});
+            recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8' });
             recorder.ondataavailable = e => {
               //console.log(e.data);
               ws.send(e.data);
@@ -85,7 +90,7 @@
         }
       }
       
-      function TogglePreview() {
+      function togglePreview() {
         if (show_preview.checked) {
           if (stream) {
             video.style.display = '';
