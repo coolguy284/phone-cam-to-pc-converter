@@ -77,10 +77,10 @@
             }
             // not video/mp4; codecs="avc1.42E01E, mp4a.40.2"
             recorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp8' });
-            recorder.ondataavailable = e => {
-              //console.log(e.data);
-              ws.send(e.data);
-            };
+            recorder.addEventListener('dataavailable', evt => {
+              //console.log(evt.data);
+              ws.send(evt.data);
+            });
             recorder.start(17);
             status_span.textContent = 'sending video';
           } catch (err) {
