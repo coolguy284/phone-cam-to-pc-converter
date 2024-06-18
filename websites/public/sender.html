@@ -10,19 +10,43 @@
     <link rel = 'stylesheet' href = 'style.css'>
     
     <style>
-      video { width: 800px; }
+      body {
+        padding-top: 1.5rem;
+      }
       
-      @media (max-width: 800px) {
-        video { width: 100%; }
+      h1 {
+        margin-top: 0;
+        margin-bottom: -0.8rem;
+      }
+      
+      .short-gap {
+        gap: 0.3rem;
       }
     </style>
   </head>
   
   <body>
-    <button onclick = 'ToggleCapture();'>Toggle Capture</button>
-    <p><input type = 'checkbox' id = 'environment' checked><label for = 'environment'>Environment Cam</label></p>
-    <p><input type = 'checkbox' id = 'show_preview' oninput = 'TogglePreview();'><label for = 'show_preview'>Show Preview</label></p>
-    <p><span id = 'status_span'>not capturing</span></p>
+    <h1>Sender Page</h1>
+    
+    <hr>
+    
+    <button onclick = 'ToggleCapture();'>Toggle Sending</button>
+    
+    <p class = 'row'>
+      <input type = 'checkbox' id = 'environment' checked>
+      <label for = 'environment'>Back Camera</label>
+    </p>
+    
+    <p class = 'row'>
+      <input type = 'checkbox' id = 'show_preview' oninput = 'TogglePreview();'>
+      <label for = 'show_preview'>Show Preview</label>
+    </p>
+    
+    <p class = 'row short-gap'>
+      Status:
+      <span id = 'status_span'>not sending</span>
+    </p>
+    
     <video id = 'video' autoplay = true style = 'display: none;'></video>
     
     <script>
@@ -36,7 +60,7 @@
           }
           stream.getTracks().forEach(track => track.stop());
           stream = null;
-          status_span.textContent = 'not capturing';
+          status_span.textContent = 'not sending';
         } else {
           try {
             stream = await navigator.mediaDevices.getUserMedia({
@@ -53,7 +77,7 @@
               ws.send(e.data);
             };
             recorder.start(17);
-            status_span.textContent = 'capturing video';
+            status_span.textContent = 'sending video';
           } catch (err) {
             console.error(err);
             status_span.textContent = err.toString();

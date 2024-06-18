@@ -1,6 +1,6 @@
 /* flex-based reset */
 
-body, body *:not(script) {
+html, body, body *:not(script) {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
@@ -10,6 +10,9 @@ body, body *:not(script) {
 
 html {
   font-size: 1.2rem;
+  height: 100%;
+  justify-content: stretch;
+  align-items: stretch;
 }
 
 body, p, h1 {
@@ -18,6 +21,16 @@ body, p, h1 {
 
 body {
   padding: 0.5rem;
+  flex-grow: 1;
+}
+
+hr {
+  width: 100%;
+}
+
+.row {
+  flex-direction: row;
+  gap: 0.4rem;
 }
 
 /* page styles */
@@ -40,9 +53,4 @@ a {
 button {
   background-color: transparent;
   font-size: inherit;
-}
-
-h1 {
-  margin-top: 1rem;
-  margin-bottom: 0.2rem;
 }

@@ -10,16 +10,40 @@
     <link rel = 'stylesheet' href = 'style.css'>
     
     <style>
-      video { width: 640px; }
+      body {
+        align-items: stretch;
+        justify-content: stretch;
+        
+        > div {
+          flex-grow: 1;
+          justify-content: center;
+        }
+      }
     </style>
   </head>
   
   <body>
-    <button onclick = 'StartWatching();'>Start Watching</button>
-    <p><span id = 'status_span'>not watching</span></p>
-    <video id = 'video' autoplay = true></video>
+    <div id = 'text_msg_div'>
+      <span id = 'text_msg'>-</span>
+    </div>
+    
+    <div id = 'video_div' style = 'display: none;'>
+      <video id = 'video'></video>
+    </div>
     
     <script>
+      // Set text to null to show video, otherwise text will be shown
+      function setStatusText(text) {
+        if (text == null) {
+          text_msg_div.style.display = 'none';
+          video_div.style.display = '';
+        } else {
+          text_msg.textContent = text;
+          text_msg_div.style.display = '';
+          video_div.style.display = '';
+        }
+      }
+      
       var source, sourceBuffer, queuedBuffers = [], ws = new WebSocket(`ws${location.protocol == 'https:' ? 's' : ''}://${location.host}/video_ws`), removeTimeout;
       
       function StartWatching() {
