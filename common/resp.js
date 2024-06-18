@@ -1,5 +1,5 @@
 var fs = require('fs');
-var mime = require('mime');
+var mime; import('mime').then(module => mime = module.default);
 
 var logger = require('../logutils.js')('common/resp');
 
