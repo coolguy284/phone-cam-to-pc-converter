@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang = 'en'>
   <head>
     <meta charset = 'utf-8'>
     
@@ -7,13 +7,9 @@
     
     <meta name = 'viewport' content = 'width=device-width, initial-scale=1.0'>
     
+    <link rel = 'stylesheet' href = 'style.css'>
+    
     <style>
-      button { display: block; padding: 1rem 2rem 1rem; }
-      
-      p { padding: 0.5rem; }
-      
-      input[type = checkbox], label { padding: 1rem; }
-      
       video { width: 800px; }
       
       @media (max-width: 800px) {
@@ -21,6 +17,7 @@
       }
     </style>
   </head>
+  
   <body>
     <button onclick = 'ToggleCapture();'>Toggle Capture</button>
     <p><input type = 'checkbox' id = 'environment' checked><label for = 'environment'>Environment Cam</label></p>

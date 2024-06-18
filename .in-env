@@ -1,9 +1,9 @@
 LOG_DEBUG: true
-TLS_KEY_FILE: D:/Data/c284-webmain-1_s/cert/nodesrv_main-key.pem
-TLS_CERT_FILE: D:/Data/c284-webmain-1_s/cert/nodesrv_main-chain.pem
+TLS_KEY_FILE: <path to key file>
+TLS_CERT_FILE: <path to cert file>
 HTTP_IP: ::
-HTTP_PORT: 8080
+HTTP_PORT: 9080
 HTTPS_IP: ::
-HTTPS_PORT: 8443
+HTTPS_PORT: 9443
 CACHE_MODE: 0
 ONLY_LOCAL_IPS: true
