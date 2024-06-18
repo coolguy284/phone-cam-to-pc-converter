@@ -1,2 +1,3 @@
 # phone-cam-to-pc-converter
-Use this to view a phone video camera stream on pc for use with OBS virtual camera.
+
+This is a Node.JS server / website collection to capture camera content on a phone and send it to a PC for use with OBS virtual camera or similar software.
