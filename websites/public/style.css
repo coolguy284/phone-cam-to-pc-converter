@@ -27,12 +27,19 @@ body {
   font-family: Arial, sans-serif;
 }
 
-a {
-  text-decoration: underline;
+a, button {
   border: 0.2rem solid white;
   border-radius: 0.6rem;
   padding: 0.6rem;
+}
+
+a {
   width: 8rem;
+}
+
+button {
+  background-color: transparent;
+  font-size: inherit;
 }
 
 h1 {
