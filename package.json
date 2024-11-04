@@ -29,8 +29,8 @@
   },
   "homepage": "https://github.com/coolguy284/phone-cam-to-pc-converter#readme",
   "dependencies": {
-    "mime": "^4.0.3",
-    "winston": "^3.13.0",
-    "ws": "^8.17.1"
+    "mime": "^4.0.4",
+    "winston": "^3.16.0",
+    "ws": "^8.18.0"
   }
 }
